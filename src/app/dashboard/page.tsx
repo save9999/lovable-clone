@@ -4,8 +4,8 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
 import {
-  Sparkles, Plus, LogOut, Trash2, ExternalLink,
-  Code2, MessageSquare, Calendar, MoreHorizontal, Pencil
+  Sparkles, Plus, LogOut, Trash2, Code2, MessageSquare,
+  Clock, Pencil, Search, ExternalLink, GitBranch, Loader2
 } from "lucide-react";
 
 interface Project {
@@ -20,12 +20,14 @@ interface Project {
 }
 
 const GRADIENTS = [
-  "linear-gradient(135deg, #7c3aed, #db2777)",
-  "linear-gradient(135deg, #2563eb, #7c3aed)",
-  "linear-gradient(135deg, #059669, #2563eb)",
-  "linear-gradient(135deg, #d97706, #db2777)",
-  "linear-gradient(135deg, #dc2626, #d97706)",
-  "linear-gradient(135deg, #0891b2, #059669)",
+  "from-violet-600 to-pink-600",
+  "from-blue-600 to-violet-600",
+  "from-emerald-600 to-blue-600",
+  "from-orange-600 to-pink-600",
+  "from-red-600 to-orange-600",
+  "from-cyan-600 to-emerald-600",
+  "from-indigo-600 to-cyan-600",
+  "from-pink-600 to-rose-600",
 ];
 
 function getGradient(id: string) {
@@ -36,9 +38,11 @@ function getGradient(id: string) {
 
 function timeAgo(date: string) {
   const diff = (Date.now() - new Date(date).getTime()) / 1000;
-  if (diff < 3600) return `${Math.floor(diff / 60)}m`;
-  if (diff < 86400) return `${Math.floor(diff / 3600)}h`;
-  return `${Math.floor(diff / 86400)}j`;
+  if (diff < 60) return "à l'instant";
+  if (diff < 3600) return `il y a ${Math.floor(diff / 60)}m`;
+  if (diff < 86400) return `il y a ${Math.floor(diff / 3600)}h`;
+  if (diff < 604800) return `il y a ${Math.floor(diff / 86400)}j`;
+  return new Date(date).toLocaleDateString("fr-FR", { day: "numeric", month: "short" });
 }
 
 export default function DashboardPage() {
@@ -49,12 +53,18 @@ export default function DashboardPage() {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editName, setEditName] = useState("");
   const [creatingNew, setCreatingNew] = useState(false);
+  const [search, setSearch] = useState("");
+  const [deletingId, setDeletingId] = useState<string | null>(null);
 
   useEffect(() => {
     fetch("/api/projects")
       .then((r) => r.json())
       .then((data) => { setProjects(Array.isArray(data) ? data : []); setLoading(false); });
   }, []);
+
+  const filtered = projects.filter((p) =>
+    p.name.toLowerCase().includes(search.toLowerCase())
+  );
 
   const createProject = async () => {
     setCreatingNew(true);
@@ -68,14 +78,17 @@ export default function DashboardPage() {
     router.push(`/projects/${project.id}`);
   };
 
-  const deleteProject = async (id: string) => {
-    if (!confirm("Supprimer ce projet ?")) return;
+  const deleteProject = async (id: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!confirm("Supprimer ce projet définitivement ?")) return;
+    setDeletingId(id);
     await fetch(`/api/projects/${id}`, { method: "DELETE" });
     setProjects((prev) => prev.filter((p) => p.id !== id));
+    setDeletingId(null);
   };
 
   const renameProject = async (id: string) => {
-    if (!editName.trim()) return;
+    if (!editName.trim()) { setEditingId(null); return; }
     await fetch(`/api/projects/${id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
@@ -85,135 +98,193 @@ export default function DashboardPage() {
     setEditingId(null);
   };
 
+  const avatar = (session?.user?.name || session?.user?.email || "U")[0].toUpperCase();
+
   return (
-    <div className="min-h-screen" style={{ background: "var(--bg-primary)" }}>
-      {/* Navbar */}
-      <nav className="border-b px-6 py-3 flex items-center justify-between sticky top-0 z-10 backdrop-blur-sm"
-        style={{ borderColor: "var(--border)", background: "rgba(10,10,15,0.9)" }}>
-        <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-xl flex items-center justify-center"
-            style={{ background: "linear-gradient(135deg, #7c3aed, #db2777)" }}>
-            <Sparkles size={15} className="text-white" />
-          </div>
-          <span className="font-bold text-white">LovableAI</span>
-        </div>
-        <div className="flex items-center gap-3">
-          <span className="text-sm" style={{ color: "var(--text-muted)" }}>
-            {session?.user?.name || session?.user?.email}
-          </span>
-          <button onClick={() => signOut({ callbackUrl: "/login" })}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs transition-all"
-            style={{ color: "var(--text-muted)", border: "1px solid var(--border)" }}
-            onMouseEnter={(e) => (e.currentTarget.style.color = "white")}
-            onMouseLeave={(e) => (e.currentTarget.style.color = "var(--text-muted)")}>
-            <LogOut size={13} />
-            Déconnexion
-          </button>
-        </div>
-      </nav>
-
-      {/* Content */}
-      <div className="max-w-6xl mx-auto px-6 py-10">
-        {/* Header */}
-        <div className="flex items-center justify-between mb-8">
-          <div>
-            <h1 className="text-2xl font-bold text-white mb-1">Mes projets</h1>
-            <p className="text-sm" style={{ color: "var(--text-muted)" }}>
-              {projects.length} projet{projects.length !== 1 ? "s" : ""}
-            </p>
-          </div>
-          <button onClick={createProject} disabled={creatingNew}
-            className="flex items-center gap-2 px-4 py-2.5 rounded-xl font-semibold text-sm text-white transition-all"
-            style={{ background: "linear-gradient(135deg, #7c3aed, #db2777)" }}>
-            <Plus size={16} />
-            Nouveau projet
-          </button>
-        </div>
-
-        {loading ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {[1,2,3].map((i) => (
-              <div key={i} className="h-48 rounded-2xl animate-pulse" style={{ background: "var(--bg-secondary)" }} />
-            ))}
-          </div>
-        ) : projects.length === 0 ? (
-          <div className="text-center py-20">
-            <div className="w-16 h-16 rounded-2xl mx-auto mb-4 flex items-center justify-center"
-              style={{ background: "var(--bg-secondary)" }}>
-              <Sparkles size={28} style={{ color: "var(--text-muted)" }} />
+    <div className="min-h-screen bg-zinc-950 text-white">
+      {/* Nav */}
+      <header className="sticky top-0 z-20 border-b border-white/5 bg-zinc-950/90 backdrop-blur-md">
+        <div className="max-w-7xl mx-auto px-6 h-14 flex items-center gap-4">
+          {/* Logo */}
+          <div className="flex items-center gap-2 mr-4">
+            <div className="w-7 h-7 rounded-lg flex items-center justify-center bg-gradient-to-br from-violet-500 to-pink-500 flex-shrink-0">
+              <Sparkles size={13} className="text-white" />
             </div>
-            <h3 className="text-lg font-semibold text-white mb-2">Aucun projet</h3>
-            <p className="text-sm mb-6" style={{ color: "var(--text-muted)" }}>
-              Crée ton premier projet et génère une app web complète
-            </p>
-            <button onClick={createProject}
-              className="px-6 py-3 rounded-xl font-semibold text-white text-sm"
-              style={{ background: "linear-gradient(135deg, #7c3aed, #db2777)" }}>
-              Commencer maintenant
+            <span className="font-bold text-[15px]">Lovable</span>
+          </div>
+
+          {/* Search */}
+          <div className="flex-1 max-w-sm relative">
+            <Search size={13} className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500" />
+            <input
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Rechercher..."
+              className="w-full pl-8 pr-4 py-1.5 text-sm rounded-lg bg-zinc-900 border border-white/8 text-white placeholder:text-zinc-600 outline-none focus:border-violet-500/50 transition-colors"
+            />
+          </div>
+
+          <div className="flex items-center gap-2 ml-auto">
+            {/* New project */}
+            <button
+              onClick={createProject}
+              disabled={creatingNew}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium bg-violet-600 hover:bg-violet-500 text-white transition-colors disabled:opacity-60"
+            >
+              {creatingNew ? <Loader2 size={13} className="animate-spin" /> : <Plus size={13} />}
+              Nouveau
+            </button>
+
+            {/* User menu */}
+            <button
+              onClick={() => signOut({ callbackUrl: "/login" })}
+              className="flex items-center gap-2 pl-1 pr-3 py-1 rounded-lg hover:bg-zinc-800 transition-colors group"
+              title="Se déconnecter"
+            >
+              <div className="w-7 h-7 rounded-full bg-gradient-to-br from-violet-500 to-pink-500 flex items-center justify-center text-xs font-bold">
+                {avatar}
+              </div>
+              <span className="text-sm text-zinc-400 group-hover:text-white transition-colors hidden sm:block">
+                {session?.user?.name || session?.user?.email?.split("@")[0]}
+              </span>
+              <LogOut size={13} className="text-zinc-600 group-hover:text-zinc-400 transition-colors" />
             </button>
           </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {projects.map((project) => (
-              <div key={project.id}
-                className="rounded-2xl overflow-hidden cursor-pointer group transition-all"
-                style={{ background: "var(--bg-secondary)", border: "1px solid var(--border)" }}
-                onClick={() => router.push(`/projects/${project.id}`)}
-                onMouseEnter={(e) => (e.currentTarget.style.borderColor = "rgba(124,58,237,0.4)")}
-                onMouseLeave={(e) => (e.currentTarget.style.borderColor = "var(--border)")}>
+        </div>
+      </header>
 
+      {/* Content */}
+      <main className="max-w-7xl mx-auto px-6 py-8">
+        {/* Page header */}
+        <div className="flex items-center justify-between mb-6">
+          <div>
+            <h1 className="text-xl font-semibold text-white">Mes projets</h1>
+            <p className="text-sm text-zinc-500 mt-0.5">
+              {loading ? "Chargement..." : `${projects.length} projet${projects.length !== 1 ? "s" : ""}`}
+            </p>
+          </div>
+        </div>
+
+        {/* Skeleton loading */}
+        {loading && (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+            {[1, 2, 3, 4].map((i) => (
+              <div key={i} className="rounded-xl border border-white/5 bg-zinc-900 overflow-hidden animate-pulse">
+                <div className="h-32 bg-zinc-800" />
+                <div className="p-4 space-y-2">
+                  <div className="h-4 bg-zinc-800 rounded w-3/4" />
+                  <div className="h-3 bg-zinc-800 rounded w-1/2" />
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* Empty state */}
+        {!loading && projects.length === 0 && (
+          <div className="flex flex-col items-center justify-center py-32 text-center">
+            <div className="w-16 h-16 rounded-2xl mb-6 flex items-center justify-center bg-gradient-to-br from-violet-500/20 to-pink-500/20 border border-white/10">
+              <Sparkles size={28} className="text-violet-400" />
+            </div>
+            <h2 className="text-lg font-semibold text-white mb-2">Aucun projet</h2>
+            <p className="text-sm text-zinc-500 mb-6 max-w-xs">
+              Crée ton premier projet et génère une app web complète en quelques secondes
+            </p>
+            <button
+              onClick={createProject}
+              disabled={creatingNew}
+              className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-medium bg-violet-600 hover:bg-violet-500 text-white transition-colors"
+            >
+              {creatingNew ? <Loader2 size={14} className="animate-spin" /> : <Plus size={14} />}
+              Créer un projet
+            </button>
+          </div>
+        )}
+
+        {/* No search results */}
+        {!loading && projects.length > 0 && filtered.length === 0 && (
+          <div className="text-center py-20">
+            <Search size={32} className="mx-auto text-zinc-700 mb-3" />
+            <p className="text-zinc-500">Aucun projet trouvé pour &ldquo;{search}&rdquo;</p>
+          </div>
+        )}
+
+        {/* Projects grid */}
+        {!loading && filtered.length > 0 && (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+            {filtered.map((project) => (
+              <div
+                key={project.id}
+                className="group rounded-xl border border-white/8 bg-zinc-900 overflow-hidden cursor-pointer hover:border-violet-500/30 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-violet-500/10 transition-all duration-200"
+                onClick={() => router.push(`/projects/${project.id}`)}
+              >
                 {/* Thumbnail */}
-                <div className="h-28 relative" style={{ background: getGradient(project.id) }}>
+                <div className={`h-32 relative bg-gradient-to-br ${getGradient(project.id)}`}>
+                  <div className="absolute inset-0 bg-black/20" />
                   <div className="absolute inset-0 flex items-center justify-center">
-                    <Code2 size={32} className="text-white opacity-30" />
+                    <Code2 size={28} className="text-white/30" />
                   </div>
-                  {project.vercelUrl && (
-                    <div className="absolute top-2 right-2 px-2 py-0.5 rounded-full text-xs font-medium"
-                      style={{ background: "rgba(16,185,129,0.2)", color: "#34d399", border: "1px solid rgba(16,185,129,0.3)" }}>
-                      ✓ Déployé
-                    </div>
-                  )}
+                  {/* Badges */}
+                  <div className="absolute top-2 left-2 flex gap-1">
+                    {project.vercelUrl && (
+                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium bg-emerald-500/20 text-emerald-300 ring-1 ring-emerald-500/30">
+                        ✓ Live
+                      </span>
+                    )}
+                    {project.githubRepo && (
+                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium bg-white/10 text-white/70 ring-1 ring-white/20">
+                        <GitBranch size={8} /> Git
+                      </span>
+                    )}
+                  </div>
+                  {/* Actions */}
+                  <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <button
+                      onClick={(e) => { e.stopPropagation(); setEditingId(project.id); setEditName(project.name); }}
+                      className="w-6 h-6 rounded-md bg-black/40 hover:bg-black/60 flex items-center justify-center transition-colors"
+                    >
+                      <Pencil size={11} className="text-white" />
+                    </button>
+                    <button
+                      onClick={(e) => deleteProject(project.id, e)}
+                      className="w-6 h-6 rounded-md bg-black/40 hover:bg-red-500/60 flex items-center justify-center transition-colors"
+                    >
+                      {deletingId === project.id
+                        ? <Loader2 size={11} className="text-white animate-spin" />
+                        : <Trash2 size={11} className="text-white" />
+                      }
+                    </button>
+                  </div>
                 </div>
 
                 {/* Info */}
-                <div className="p-4">
-                  <div className="flex items-start justify-between mb-2">
-                    {editingId === project.id ? (
-                      <input
-                        autoFocus
-                        value={editName}
-                        onChange={(e) => setEditName(e.target.value)}
-                        onBlur={() => renameProject(project.id)}
-                        onKeyDown={(e) => { if (e.key === "Enter") renameProject(project.id); if (e.key === "Escape") setEditingId(null); }}
-                        onClick={(e) => e.stopPropagation()}
-                        className="text-sm font-semibold text-white bg-transparent border-b outline-none flex-1"
-                        style={{ borderColor: "#7c3aed" }}
-                      />
-                    ) : (
-                      <h3 className="text-sm font-semibold text-white truncate flex-1">{project.name}</h3>
-                    )}
+                <div className="p-3">
+                  {editingId === project.id ? (
+                    <input
+                      autoFocus
+                      value={editName}
+                      onChange={(e) => setEditName(e.target.value)}
+                      onBlur={() => renameProject(project.id)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") renameProject(project.id);
+                        if (e.key === "Escape") setEditingId(null);
+                      }}
+                      onClick={(e) => e.stopPropagation()}
+                      className="w-full text-sm font-medium text-white bg-transparent border-b border-violet-500 outline-none pb-0.5 mb-2"
+                    />
+                  ) : (
+                    <h3 className="text-sm font-medium text-white truncate mb-1.5">{project.name}</h3>
+                  )}
 
-                    <div className="flex items-center gap-1 ml-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                      <button onClick={(e) => { e.stopPropagation(); setEditingId(project.id); setEditName(project.name); }}
-                        className="p-1 rounded hover:bg-white/10 transition-colors">
-                        <Pencil size={12} style={{ color: "var(--text-muted)" }} />
-                      </button>
-                      <button onClick={(e) => { e.stopPropagation(); deleteProject(project.id); }}
-                        className="p-1 rounded hover:bg-red-500/10 transition-colors">
-                        <Trash2 size={12} className="text-red-400" />
-                      </button>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center gap-4 mt-3">
-                    <span className="flex items-center gap-1 text-xs" style={{ color: "var(--text-muted)" }}>
-                      <Code2 size={11} /> {project._count.files} fichiers
+                  <div className="flex items-center gap-3 text-[11px] text-zinc-600">
+                    <span className="flex items-center gap-1">
+                      <Code2 size={10} /> {project._count.files}
                     </span>
-                    <span className="flex items-center gap-1 text-xs" style={{ color: "var(--text-muted)" }}>
-                      <MessageSquare size={11} /> {project._count.messages}
+                    <span className="flex items-center gap-1">
+                      <MessageSquare size={10} /> {project._count.messages}
                     </span>
-                    <span className="flex items-center gap-1 text-xs ml-auto" style={{ color: "var(--text-muted)" }}>
-                      <Calendar size={11} /> {timeAgo(project.updatedAt)}
+                    <span className="flex items-center gap-1 ml-auto">
+                      <Clock size={10} /> {timeAgo(project.updatedAt)}
                     </span>
                   </div>
                 </div>
@@ -221,7 +292,7 @@ export default function DashboardPage() {
             ))}
           </div>
         )}
-      </div>
+      </main>
     </div>
   );
 }

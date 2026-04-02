@@ -1,19 +1,20 @@
 @import "tailwindcss";
 
 :root {
-  --bg-primary: #0a0a0f;
-  --bg-secondary: #111118;
-  --bg-tertiary: #16161f;
-  --bg-hover: #1c1c28;
-  --border: #1e1e2e;
-  --border-light: #2a2a3a;
-  --text-primary: #f1f1f5;
-  --text-secondary: #9191a8;
-  --text-muted: #55556a;
+  --bg-primary: #09090b;
+  --bg-secondary: #18181b;
+  --bg-tertiary: #27272a;
+  --bg-hover: #3f3f46;
+  --border: rgba(255,255,255,0.08);
+  --border-light: rgba(255,255,255,0.12);
+  --text-primary: #fafafa;
+  --text-secondary: #a1a1aa;
+  --text-muted: #71717a;
   --accent: #7c3aed;
   --accent-hover: #6d28d9;
-  --accent-light: rgba(124, 58, 237, 0.15);
-  --green: #10b981;
+  --accent-light: rgba(124, 58, 237, 0.12);
+  --green: #22c55e;
+  --red: #ef4444;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -24,32 +25,57 @@ html, body {
   color: var(--text-primary);
   font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", sans-serif;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 /* Scrollbars */
 ::-webkit-scrollbar { width: 4px; height: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--border-light); border-radius: 2px; }
-::-webkit-scrollbar-thumb:hover { background: #3a3a50; }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
 
 /* Animations */
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(8px); }
+  from { opacity: 0; transform: translateY(6px); }
   to { opacity: 1; transform: translateY(0); }
 }
+@keyframes fadeInLeft {
+  from { opacity: 0; transform: translateX(-8px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.96); }
+  to { opacity: 1; transform: scale(1); }
+}
 @keyframes pulse-dot {
-  0%, 80%, 100% { transform: scale(0.6); opacity: 0.3; }
+  0%, 80%, 100% { transform: scale(0.5); opacity: 0.3; }
   40% { transform: scale(1); opacity: 1; }
 }
 @keyframes shimmer {
-  from { background-position: -200% 0; }
-  to { background-position: 200% 0; }
+  from { background-position: -400% 0; }
+  to { background-position: 400% 0; }
 }
 @keyframes spin-slow {
   to { transform: rotate(360deg); }
 }
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+@keyframes glow-pulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.8; }
+}
 
+/* Utility classes */
 .animate-fade-in { animation: fadeIn 0.3s ease forwards; }
+.animate-fade-in-left { animation: fadeInLeft 0.3s ease forwards; }
+.animate-scale-in { animation: scaleIn 0.2s ease forwards; }
+.animate-spin-slow { animation: spin-slow 3s linear infinite; }
+.animate-float { animation: float 3s ease-in-out infinite; }
+
+/* Typing indicator */
+.dot-pulse { display: flex; align-items: center; gap: 4px; }
 .dot-pulse span {
   display: inline-block;
   width: 5px; height: 5px;
@@ -57,8 +83,8 @@ html, body {
   background: var(--accent);
   animation: pulse-dot 1.4s ease-in-out infinite;
 }
-.dot-pulse span:nth-child(2) { animation-delay: 0.2s; }
-.dot-pulse span:nth-child(3) { animation-delay: 0.4s; }
+.dot-pulse span:nth-child(2) { animation-delay: 0.16s; }
+.dot-pulse span:nth-child(3) { animation-delay: 0.32s; }
 
 /* Gradient text */
 .gradient-text {
@@ -71,6 +97,39 @@ html, body {
 /* Glass effect */
 .glass {
   background: rgba(255, 255, 255, 0.03);
-  backdrop-filter: blur(12px);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+/* Shimmer skeleton */
+.shimmer {
+  background: linear-gradient(90deg, #27272a 25%, #3f3f46 50%, #27272a 75%);
+  background-size: 400% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+}
+
+/* Code font */
+.font-code {
+  font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', 'SF Mono', Consolas, monospace;
+}
+
+/* Glow effects */
+.glow-violet {
+  box-shadow: 0 0 20px rgba(124, 58, 237, 0.3);
+}
+.glow-violet-sm {
+  box-shadow: 0 0 10px rgba(124, 58, 237, 0.2);
+}
+
+/* Focus styles */
+*:focus-visible {
+  outline: 2px solid rgba(124, 58, 237, 0.6);
+  outline-offset: 2px;
+}
+
+/* Selection */
+::selection {
+  background: rgba(124, 58, 237, 0.3);
+  color: white;
 }
