@@ -1,20 +1,29 @@
 @import "tailwindcss";
 
 :root {
-  --bg-primary: #09090b;
-  --bg-secondary: #18181b;
-  --bg-tertiary: #27272a;
-  --bg-hover: #3f3f46;
-  --border: rgba(255,255,255,0.08);
-  --border-light: rgba(255,255,255,0.12);
-  --text-primary: #fafafa;
-  --text-secondary: #a1a1aa;
-  --text-muted: #71717a;
-  --accent: #7c3aed;
-  --accent-hover: #6d28d9;
-  --accent-light: rgba(124, 58, 237, 0.12);
-  --green: #22c55e;
-  --red: #ef4444;
+  /* Light cream theme — lovable.dev */
+  --bg-primary: #fcfbf8;
+  --bg-secondary: #f5f4f0;
+  --bg-tertiary: #eeece6;
+  --bg-hover: #e8e6df;
+  --border: rgba(0,0,0,0.08);
+  --border-light: rgba(0,0,0,0.06);
+  --text-primary: #0a0a0a;
+  --text-secondary: #3d3d3d;
+  --text-muted: #6b7280;
+  --accent: #0a0a0a;
+  --accent-hover: #1a1a1a;
+  --accent-light: rgba(0,0,0,0.06);
+  --green: #16a34a;
+  --red: #dc2626;
+
+  /* Legacy dark vars kept for editor/dashboard */
+  --dark-bg: #09090b;
+  --dark-secondary: #18181b;
+  --dark-tertiary: #27272a;
+  --dark-border: rgba(255,255,255,0.08);
+  --dark-text: #fafafa;
+  --dark-muted: #71717a;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -23,7 +32,7 @@ html, body {
   height: 100%;
   background: var(--bg-primary);
   color: var(--text-primary);
-  font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", sans-serif;
+  font-family: var(--font-inter, -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", sans-serif);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -31,21 +40,21 @@ html, body {
 /* Scrollbars */
 ::-webkit-scrollbar { width: 4px; height: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 4px; }
-::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
+::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.15); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(0,0,0,0.25); }
 
-/* Animations */
+/* ── ANIMATIONS ── */
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(6px); }
-  to { opacity: 1; transform: translateY(0); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 @keyframes fadeInLeft {
   from { opacity: 0; transform: translateX(-8px); }
-  to { opacity: 1; transform: translateX(0); }
+  to   { opacity: 1; transform: translateX(0); }
 }
 @keyframes scaleIn {
   from { opacity: 0; transform: scale(0.96); }
-  to { opacity: 1; transform: scale(1); }
+  to   { opacity: 1; transform: scale(1); }
 }
 @keyframes pulse-dot {
   0%, 80%, 100% { transform: scale(0.5); opacity: 0.3; }
@@ -53,7 +62,7 @@ html, body {
 }
 @keyframes shimmer {
   from { background-position: -400% 0; }
-  to { background-position: 400% 0; }
+  to   { background-position:  400% 0; }
 }
 @keyframes spin-slow {
   to { transform: rotate(360deg); }
@@ -62,17 +71,21 @@ html, body {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-6px); }
 }
-@keyframes glow-pulse {
-  0%, 100% { opacity: 0.4; }
-  50% { opacity: 0.8; }
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.3; transform: scale(1); }
+  50% { opacity: 0.6; transform: scale(1.05); }
+}
+@keyframes typewriter-cursor {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
 }
 
-/* Utility classes */
-.animate-fade-in { animation: fadeIn 0.3s ease forwards; }
+.animate-fade-in      { animation: fadeIn 0.3s ease forwards; }
 .animate-fade-in-left { animation: fadeInLeft 0.3s ease forwards; }
-.animate-scale-in { animation: scaleIn 0.2s ease forwards; }
-.animate-spin-slow { animation: spin-slow 3s linear infinite; }
-.animate-float { animation: float 3s ease-in-out infinite; }
+.animate-scale-in     { animation: scaleIn 0.2s ease forwards; }
+.animate-spin-slow    { animation: spin-slow 3s linear infinite; }
+.animate-float        { animation: float 3s ease-in-out infinite; }
+.animate-pulse-glow   { animation: pulse-glow 4s ease-in-out infinite; }
 
 /* Typing indicator */
 .dot-pulse { display: flex; align-items: center; gap: 4px; }
@@ -86,24 +99,8 @@ html, body {
 .dot-pulse span:nth-child(2) { animation-delay: 0.16s; }
 .dot-pulse span:nth-child(3) { animation-delay: 0.32s; }
 
-/* Gradient text */
-.gradient-text {
-  background: linear-gradient(135deg, #a78bfa 0%, #ec4899 50%, #f97316 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-/* Glass effect */
-.glass {
-  background: rgba(255, 255, 255, 0.03);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-}
-
-/* Shimmer skeleton */
-.shimmer {
+/* Dark shimmer for editor */
+.shimmer-dark {
   background: linear-gradient(90deg, #27272a 25%, #3f3f46 50%, #27272a 75%);
   background-size: 400% 100%;
   animation: shimmer 1.5s ease-in-out infinite;
@@ -114,22 +111,13 @@ html, body {
   font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', 'SF Mono', Consolas, monospace;
 }
 
-/* Glow effects */
-.glow-violet {
-  box-shadow: 0 0 20px rgba(124, 58, 237, 0.3);
-}
-.glow-violet-sm {
-  box-shadow: 0 0 10px rgba(124, 58, 237, 0.2);
+/* Selection */
+::selection {
+  background: rgba(10,10,10,0.12);
 }
 
 /* Focus styles */
 *:focus-visible {
-  outline: 2px solid rgba(124, 58, 237, 0.6);
+  outline: 2px solid rgba(10,10,10,0.4);
   outline-offset: 2px;
-}
-
-/* Selection */
-::selection {
-  background: rgba(124, 58, 237, 0.3);
-  color: white;
 }
