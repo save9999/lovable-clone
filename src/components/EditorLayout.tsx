@@ -138,9 +138,9 @@ export default function EditorLayout({
             onMouseLeave={(e) => (e.currentTarget.style.color = "var(--text-muted)")}>
             <ArrowLeft size={14} />
           </button>
-          <div className="w-6 h-6 rounded-lg flex items-center justify-center flex-shrink-0"
-            style={{ background: "linear-gradient(135deg, #7c3aed, #db2777)" }}>
-            <Sparkles size={12} className="text-white" />
+          <div className="w-6 h-6 rounded-lg flex items-center justify-center flex-shrink-0 animate-arc-pulse"
+            style={{ background: "radial-gradient(circle, #00d4ff 0%, #004080 100%)", boxShadow: "0 0 10px rgba(0,212,255,0.4)" }}>
+            <Sparkles size={12} style={{ color: "#fff" }} />
           </div>
           <span className="text-sm font-medium text-white truncate max-w-48">{projectName || "Nouveau projet"}</span>
 
@@ -218,7 +218,7 @@ export default function EditorLayout({
               </button>
               <button onClick={handleDeploy} disabled={deploying}
                 className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold text-white transition-all"
-                style={{ background: deploying ? "#6d28d9" : "linear-gradient(135deg, #7c3aed, #db2777)" }}>
+                style={{ background: deploying ? "#004d6e" : "linear-gradient(135deg, #00d4ff, #ffb800)", color: "#000" }}>
                 {deploying ? <Loader2 size={12} className="animate-spin" /> : <Rocket size={12} />}
                 Déployer
               </button>
@@ -243,7 +243,7 @@ export default function EditorLayout({
         {/* Drag handle chat */}
         <div
           onMouseDown={onChatResize}
-          className="w-1 flex-shrink-0 cursor-col-resize transition-colors hover:bg-purple-500/30"
+          className="w-1 flex-shrink-0 cursor-col-resize transition-colors hover:bg-cyan-500/30"
           style={{ background: "var(--border)" }}
         />
 
@@ -265,7 +265,7 @@ export default function EditorLayout({
                         className="flex-1 flex items-center justify-center gap-1.5 py-2 text-xs transition-all"
                         style={{
                           color: sidebarTab === tab ? "white" : "var(--text-muted)",
-                          borderBottom: sidebarTab === tab ? "1px solid #7c3aed" : "1px solid transparent",
+                          borderBottom: sidebarTab === tab ? "1px solid #00d4ff" : "1px solid transparent",
                           marginBottom: "-1px",
                           background: "transparent",
                         }}>
@@ -288,7 +288,7 @@ export default function EditorLayout({
               {/* Drag handle explorer */}
               <div
                 onMouseDown={onExplorerResize}
-                className="w-1 flex-shrink-0 cursor-col-resize transition-colors hover:bg-purple-500/30"
+                className="w-1 flex-shrink-0 cursor-col-resize transition-colors hover:bg-cyan-500/30"
                 style={{ background: "var(--border)" }}
               />
             </>
