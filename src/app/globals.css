@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 :root {
-  /* JARVIS HUD Theme — deep black + cyan neon + gold */
+  /* CREA HUD Theme — deep black + cyan neon + gold */
   --bg-primary: #020811;
   --bg-secondary: #040f1a;
   --bg-tertiary: #071525;
@@ -23,7 +23,7 @@
   --arc: #4fc3f7;
 }
 
-/* ── Editor dark variant (same JARVIS theme, slightly darker) ── */
+/* ── Editor dark variant (same CREA theme, slightly darker) ── */
 [data-theme="editor"] {
   --bg-primary: #010608;
   --bg-secondary: #020d16;

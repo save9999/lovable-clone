@@ -104,7 +104,7 @@ export default function DashboardPage() {
                 <Sparkles size={12} className="text-white" />
               </div>
             </div>
-            <span className="font-black text-sm tracking-widest font-mono neon-cyan">J.A.R.V.I.S</span>
+            <span className="font-black text-sm tracking-widest font-mono neon-cyan">CREA</span>
           </div>
 
           {/* Search */}
@@ -191,7 +191,7 @@ export default function DashboardPage() {
             </div>
             <h2 className="text-lg font-black font-mono neon-cyan mb-2">AUCUN PROJET</h2>
             <p className="text-sm mb-8 max-w-xs" style={{ color: "rgba(122,184,212,0.6)" }}>
-              Décris ton application et JARVIS génère le code complet en quelques secondes
+              Décris ton application et CREA génère le code complet en quelques secondes
             </p>
             <button
               onClick={createProject}

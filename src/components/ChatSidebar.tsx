@@ -86,7 +86,7 @@ export default function ChatSidebar({ messages, onSend, isLoading, hasFiles }: C
         <div className="w-6 h-6 rounded-lg flex items-center justify-center" style={{ background: "var(--accent-light)" }}>
           <Sparkles size={12} style={{ color: "#00d4ff" }} />
         </div>
-        <span className="text-sm font-semibold font-mono tracking-wider neon-cyan">J.A.R.V.I.S</span>
+        <span className="text-sm font-semibold font-mono tracking-wider neon-cyan">CREA</span>
         <span className="ml-auto text-[10px] px-2 py-0.5 rounded-full font-mono" style={{ background: "rgba(0,212,255,0.08)", color: "#00d4ff", border: "1px solid rgba(0,212,255,0.2)" }}>
           CLAUDE 4.6
         </span>

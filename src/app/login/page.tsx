@@ -6,11 +6,11 @@ import { useRouter } from "next/navigation";
 import { Eye, EyeOff, Loader2, ArrowUp } from "lucide-react";
 
 const TYPEWRITER_PHRASES = [
-  "Demande à JARVIS de créer un dashboard SaaS",
-  "Demande à JARVIS de créer une boutique e-commerce",
-  "Demande à JARVIS de créer un portfolio futuriste",
-  "Demande à JARVIS de créer une app de chat",
-  "Demande à JARVIS de créer un gestionnaire de tâches",
+  "Demande à CREA de créer un dashboard SaaS",
+  "Demande à CREA de créer une boutique e-commerce",
+  "Demande à CREA de créer un portfolio futuriste",
+  "Demande à CREA de créer une app de chat",
+  "Demande à CREA de créer un gestionnaire de tâches",
 ];
 
 function TypewriterText() {
@@ -107,7 +107,7 @@ export default function LoginPage() {
                 <span className="text-white text-xs font-black">J</span>
               </div>
             </div>
-            <span className="font-black text-sm tracking-widest font-mono neon-cyan">J.A.R.V.I.S</span>
+            <span className="font-black text-sm tracking-widest font-mono neon-cyan">CREA</span>
           </a>
 
           <h1 className="text-2xl font-black font-mono mb-1" style={{ color: "#c8f0ff" }}>
@@ -245,7 +245,7 @@ export default function LoginPage() {
         </div>
       </div>
 
-      {/* ── RIGHT: JARVIS HUD Preview ── */}
+      {/* ── RIGHT: CREA HUD Preview ── */}
       <div className="hidden lg:flex relative overflow-hidden" style={{ background: "#010608", borderLeft: "1px solid rgba(0,212,255,0.08)" }}>
         <div className="absolute inset-0 hud-grid opacity-50" />
         <div className="absolute inset-0 scanline" />
@@ -254,7 +254,7 @@ export default function LoginPage() {
         <div className="absolute top-1/3 right-1/3 w-80 h-80 rounded-full opacity-8 blur-3xl pointer-events-none"
           style={{ background: "radial-gradient(circle, #00d4ff, transparent)" }} />
 
-        {/* Floating JARVIS HUD panel */}
+        {/* Floating CREA HUD panel */}
         <div className="absolute inset-0 flex items-center justify-center p-12">
           <div className="w-full max-w-sm relative">
             {/* Corner brackets */}
@@ -270,7 +270,7 @@ export default function LoginPage() {
                   <div className="w-5 h-5 rounded-full flex items-center justify-center" style={{ background: "radial-gradient(circle, #00d4ff, #004080)", boxShadow: "0 0 8px rgba(0,212,255,0.5)" }}>
                     <span className="text-white text-[9px] font-black">J</span>
                   </div>
-                  <span className="text-xs font-mono font-bold neon-cyan">J.A.R.V.I.S</span>
+                  <span className="text-xs font-mono font-bold neon-cyan">CREA</span>
                   <span className="ml-auto flex items-center gap-1 text-[10px] font-mono" style={{ color: "#00ff9d" }}>
                     <span className="w-1.5 h-1.5 rounded-full animate-pulse-glow" style={{ background: "#00ff9d", display: "inline-block" }} />
                     EN LIGNE

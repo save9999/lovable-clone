@@ -16,7 +16,7 @@ const SUGGESTIONS = [
 ];
 
 const BOOT_LINES = [
-  "JARVIS — v4.1.0 INITIALISÉ",
+  "CREA — v4.1.0 INITIALISÉ",
   "Chargement modules IA… OK",
   "Connexion serveurs Claude… OK",
   "Interface holographique… ACTIVE",
@@ -106,7 +106,7 @@ export default function LandingPage({ onStart }: LandingPageProps) {
           </div>
           <div>
             <span className="font-black text-lg tracking-wider neon-cyan" style={{ fontFamily: "monospace" }}>
-              J.A.R.V.I.S
+              CREA
             </span>
             <span className="ml-2 text-xs" style={{ color: "rgba(0,212,255,0.5)", fontFamily: "monospace" }}>
               BUILD v4.1
@@ -172,7 +172,7 @@ export default function LandingPage({ onStart }: LandingPageProps) {
             </span>
           </h1>
           <p className="text-base md:text-lg" style={{ color: "rgba(122,184,212,0.7)" }}>
-            JARVIS génère le code complet en quelques secondes.
+            CREA génère le code complet en quelques secondes.
           </p>
         </div>
 
@@ -280,7 +280,7 @@ export default function LandingPage({ onStart }: LandingPageProps) {
       {/* Footer */}
       <footer className="relative z-10 py-4 text-center border-t" style={{ borderColor: "rgba(0,212,255,0.06)" }}>
         <span className="text-xs font-mono" style={{ color: "rgba(0,212,255,0.2)" }}>
-          J.A.R.V.I.S — JUST A RATHER VERY INTELLIGENT SYSTEM — BUILD v4.1.0
+          CREA — JUST A RATHER VERY INTELLIGENT SYSTEM — BUILD v4.1.0
         </span>
       </footer>
     </div>
