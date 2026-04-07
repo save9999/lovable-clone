@@ -124,7 +124,7 @@ export default function EditorLayout({
   };
 
   return (
-    <div className="h-screen flex flex-col overflow-hidden" style={{ background: "var(--bg-primary)" }}>
+    <div className="h-screen flex flex-col overflow-hidden" data-theme="editor" style={{ background: "var(--bg-primary)" }}>
       {/* Topbar */}
       <header className="h-11 flex items-center justify-between px-3 flex-shrink-0"
         style={{ background: "var(--bg-secondary)", borderBottom: "1px solid var(--border)" }}>

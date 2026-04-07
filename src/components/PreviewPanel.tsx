@@ -22,7 +22,7 @@ export default function PreviewPanel({ files }: { files: FileNode[] }) {
       <div className="h-full flex items-center justify-center" style={{ background: "var(--bg-primary)" }}>
         <div className="text-center space-y-2">
           <div className="text-4xl">🖥️</div>
-          <p className="text-sm font-medium text-white">Preview live</p>
+          <p className="text-sm font-medium" style={{ color: "var(--text-primary)" }}>Preview live</p>
           <p className="text-xs" style={{ color: "var(--text-muted)" }}>Apparaît après génération</p>
         </div>
       </div>

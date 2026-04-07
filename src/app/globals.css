@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 :root {
-  /* Light cream theme — lovable.dev */
+  /* Light cream theme — landing/login/dashboard */
   --bg-primary: #fcfbf8;
   --bg-secondary: #f5f4f0;
   --bg-tertiary: #eeece6;
@@ -16,14 +16,24 @@
   --accent-light: rgba(0,0,0,0.06);
   --green: #16a34a;
   --red: #dc2626;
+}
 
-  /* Legacy dark vars kept for editor/dashboard */
-  --dark-bg: #09090b;
-  --dark-secondary: #18181b;
-  --dark-tertiary: #27272a;
-  --dark-border: rgba(255,255,255,0.08);
-  --dark-text: #fafafa;
-  --dark-muted: #71717a;
+/* ── Dark editor theme ── */
+[data-theme="editor"] {
+  --bg-primary: #0f0f11;
+  --bg-secondary: #1a1a1d;
+  --bg-tertiary: #242428;
+  --bg-hover: #2e2e33;
+  --border: rgba(255,255,255,0.08);
+  --border-light: rgba(255,255,255,0.05);
+  --text-primary: #f4f4f5;
+  --text-secondary: #a1a1aa;
+  --text-muted: #71717a;
+  --accent: #7c3aed;
+  --accent-hover: #6d28d9;
+  --accent-light: rgba(124,58,237,0.15);
+  --green: #10b981;
+  --red: #f87171;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
